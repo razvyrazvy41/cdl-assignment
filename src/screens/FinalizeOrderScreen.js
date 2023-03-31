@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {ShopContext} from '../../App';
 import {View, Text, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
 export default function FinalizeOrderScreen() {
   const navigation = useNavigation();
@@ -9,21 +9,17 @@ export default function FinalizeOrderScreen() {
   const [countDown, setCountDown] = useState(5);
 
   useEffect(() => {
-    const countDownInterval = setInterval(() => {
-      setCountDown(countDown - 1);
-    }, 750);
+    const timeout = setTimeout(() => {
+      setCountDown(prevCountDown => prevCountDown - 1);
+    }, 1000);
 
-    return () => clearInterval(countDownInterval);
+    if (countDown === 0) {
+      setCartItems([]);
+      navigation.dispatch(StackActions.replace('Home'));
+    }
+
+    return () => clearTimeout(timeout);
   }, [countDown]);
-
-  useEffect(() => {
-    setCartItems([]);
-    const returnToHome = setTimeout(() => {
-      navigation.navigate('Home');
-    }, 5000);
-
-    return () => clearTimeout(returnToHome);
-  }, []);
 
   return (
     <View className="flex-1 px-4 bg-white justify-center">

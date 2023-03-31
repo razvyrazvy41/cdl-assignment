@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {ShopContext} from '../../App';
+import {ShopContext} from '../context/ShopContext';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {Icon} from 'react-native-elements';
 import Theme from '../style/Theme';

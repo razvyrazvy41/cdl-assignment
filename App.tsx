@@ -1,68 +1,19 @@
-import React, {useState, createContext} from 'react';
+import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from './src/screens/HomeScreen';
 import ShopCartScreen from './src/screens/ShopCartScreen';
 import FinalizeOrderScreen from './src/screens/FinalizeOrderScreen';
+import {ShopContext, ShopProvider} from './src/context/ShopContext';
 
-const Stack = createNativeStackNavigator();
-const ShopContext = createContext({});
+const Stack = createStackNavigator();
 
 function App() {
-  const [cartItems, setCartItems] = useState<any[]>([]);
-
-  const getItemQuantity = (id: number) => {
-    return cartItems.find(item => item.id === id)?.quantity || 0;
-  };
-
-  const increaseItemQuantity = (id: number) => {
-    setCartItems(currentCartItems => {
-      const item = currentCartItems.find(item => item.id === id);
-
-      if (item == null) return [...currentCartItems, {id, quantity: 1}];
-      else {
-        return currentCartItems.map(item => {
-          if (item.id === id) return {...item, quantity: item.quantity + 1};
-          else return item;
-        });
-      }
-    });
-  };
-
-  const decreaseItemQuantity = (id: number) => {
-    setCartItems(currentCartItems => {
-      const item = currentCartItems.find(item => item.id === id);
-
-      if (item.quantity === 1)
-        return currentCartItems.filter(item => item.id !== id);
-      else {
-        return currentCartItems.map(item => {
-          if (item.id === id) return {...item, quantity: item.quantity - 1};
-          else return item;
-        });
-      }
-    });
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems(currentCartItems => {
-      return currentCartItems.filter(item => item.id !== id);
-    });
-  };
-
   return (
     <SafeAreaView style={{flex: 1}}>
-      <ShopContext.Provider
-        value={{
-          cartItems,
-          setCartItems,
-          getItemQuantity,
-          increaseItemQuantity,
-          decreaseItemQuantity,
-          removeItem,
-        }}>
+      <ShopProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
@@ -73,10 +24,7 @@ function App() {
             <Stack.Screen
               name="ShopCart"
               component={ShopCartScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal',
-              }}
+              options={{headerShown: false, presentation: 'modal'}}
             />
             <Stack.Screen
               name="FinalizeOrder"
@@ -85,7 +33,7 @@ function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </ShopContext.Provider>
+      </ShopProvider>
     </SafeAreaView>
   );
 }

@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
-import {ShopContext} from '../../App';
-import {View, Text, Image, FlatList, Modal} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {ShopContext} from '../context/ShopContext';
+import {View, Text, Image, FlatList} from 'react-native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 
 import {products} from '../data/data';
 import {calculateTotalPriceOfBasket} from '../helpers/helpers';
@@ -47,7 +47,14 @@ export default function ShopCartScreen() {
                   <CustomButton
                     parrentClassNames="flex-1 bg-emerald-500 rounded-xl mx-2 py-3"
                     text={'Finalize Order'}
-                    onPress={() => navigation.navigate('FinalizeOrder')}
+                    onPress={() => {
+                      navigation.dispatch(
+                        CommonActions.reset({
+                          index: 1,
+                          routes: [{name: 'FinalizeOrder'}],
+                        }),
+                      );
+                    }}
                   />
                 </View>
               </>
