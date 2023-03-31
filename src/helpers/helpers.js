@@ -18,6 +18,10 @@ export const calculateTotalPriceOfBasket = items => {
 };
 
 export const calculateItemDiscountedPrice = item => {
+  const isQuantityLowerThanSpecialPriceItemsNumber =
+    item.quantity < item.itemsPerSpecialPrice;
+  if (isQuantityLowerThanSpecialPriceItemsNumber) return 0;
+
   if (item.hasSpecialPrice) {
     const numSpecialPriceItems = Math.floor(
       item.quantity / item.itemsPerSpecialPrice,
@@ -27,7 +31,5 @@ export const calculateItemDiscountedPrice = item => {
       numSpecialPriceItems * item.specialPrice +
       numRegularPriceItems * item.unitPrice
     );
-  } else {
-    return 0;
-  }
+  } else return 0;
 };
